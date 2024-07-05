@@ -194,6 +194,7 @@
                     notify("康复训练提醒", "准备开始康复训练");
                     await speakMessage("Start rehabilitation training.");
                     printProgressBar(startDelay);
+                    window.scrollBy(0,30);
                     await delay(startDelay * 1000);
                 }
             }
