@@ -82,18 +82,18 @@
         }
 
         function notify(title, message) {
-            if (window.Notification) {
-                if (Notification.permission === "granted") {
-                    new Notification(title, { body: message });
-                } else {
-                    if (Notification.permission !== "granted") {
-                        Notification.requestPermission().then(permission => {
-                        });
-                    }
-                }
-            } else {
-                alert('浏览器不支持 Notification!');
-            }
+            // if (window.Notification) {
+            //     if (Notification.permission === "granted") {
+            //         new Notification(title, { body: message });
+            //     } else {
+            //         if (Notification.permission !== "granted") {
+            //             Notification.requestPermission().then(permission => {
+            //             });
+            //         }
+            //     }
+            // } else {
+            //     alert('浏览器不支持 Notification!');
+            // }
         }
 
         // function speakMessage(message) {
@@ -190,10 +190,10 @@
         }
 
         // 检查通知权限
-        if (Notification.permission !== "granted") {
-            Notification.requestPermission().then(permission => {
-            });
-        }
+        // if (Notification.permission !== "granted") {
+        //     Notification.requestPermission().then(permission => {
+        //     });
+        // }
 
         document.addEventListener("DOMContentLoaded", () => {
             const myDate = new Date();
