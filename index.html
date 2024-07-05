@@ -98,14 +98,15 @@
 
         function speakMessage(message) {
             return new Promise(resolve => {
-                if ('speechSynthesis' in window) {
-                    const utter = new SpeechSynthesisUtterance();
-                    utter.text = message;
-                    utter.onend = resolve;
-                    speechSynthesis.speak(utter);
-                } else {
-                    resolve();
-                }
+                // if ('speechSynthesis' in window) {
+                //     const utter = new SpeechSynthesisUtterance();
+                //     utter.text = message;
+                //     utter.onend = resolve;
+                //     speechSynthesis.speak(utter);
+                // } else {
+                //     resolve();
+                // }
+                resolve();
             });
         }
 
