@@ -32,6 +32,8 @@
             max-width:100%;
             height: 30px;
             margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -165,26 +167,26 @@
                 const reminder_text = `${current_time} - (${loops + 1}, ${re_index + 1}) 第 ${loops + 1} 次${reminders[re_index]}`;
                 logMessage(reminder_text);
                 
-                window.scrollBy(0,30);
                 notify("康复训练提醒", reminders[re_index]);
                 await speakMessage("It's time to do the next training.");
                 printProgressBar(trainingDuration);
+                window.scrollBy(0,30);
                 await delay(trainingDuration * 1000);
 
                 index += 1;
                 loops = Math.floor(index / reminders.length);
                 if (loops === old_loops) {
-                    window.scrollBy(0,30);
                     notify("康复训练提醒", `休息 ${littleRestDuration} 秒`);
                     await speakMessage("It's time to rest.");
                     printProgressBar(littleRestDuration);
+                    window.scrollBy(0,30);
                     await delay(littleRestDuration *1000);
                 } else {
                     logMessage(`${current_time} - 第 ${loops} 次长休息！`);
-                    window.scrollBy(0,30);
                     notify("康复训练提醒", `休息 ${bigRestDuration} 秒.`);
                     await speakMessage("It's time to have a long rest.");
                     printProgressBar(bigRestDuration);
+                    window.scrollBy(0,30);
                     await delay(bigRestDuration * 1000);
                     old_loops = loops;
                 }
