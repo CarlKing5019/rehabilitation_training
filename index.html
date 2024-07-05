@@ -174,6 +174,7 @@
                 const re_index = index % reminders.length;
                 const reminder_text = `${current_time} - (${loops + 1}, ${re_index + 1}) 第 ${loops + 1} 次${reminders[re_index]}`;
                 logMessage(reminder_text);
+                window.scrollBy(0,30);
                 
                 notify("康复训练提醒", reminders[re_index]);
                 await speakMessage("It's time to do the next training.");
