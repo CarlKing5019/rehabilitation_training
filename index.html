@@ -52,6 +52,8 @@
             "点赞！",
             "打枪！",
             "点点点！",
+            "握手指！",
+            "伸展手指！",
             "往上压手腕！",
             "往前拉伸手！",
             "往下压手腕！",
@@ -59,8 +61,8 @@
             "往右拉伸手！"
         ];
         const startDelay = 5;
-        const trainingDuration = 7;
-        const littleRestDuration = 5;
+        const trainingDuration = 60;
+        const littleRestDuration = 15;
         const bigRestDuration = 120;
         /* 设置结束 */
 
@@ -190,10 +192,9 @@
         }
 
         // 检查语音播报权限
-        if ( 'speechSynthesis' in window ) {
-          speechSynthesis.cancel(); // removes anything 'stuck'
+        if ('speechSynthesis' in window) {
+          speechSynthesis.cancel();
           speechSynthesis.getVoices();
-          // Safari loads voices synchronously so now safe to enable
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -209,15 +210,15 @@
             reminders.forEach((reminder, index) => logMessage(`${index + 1}. ${reminder}`));
             logMessage("每个动作一分钟，十个一组，每天三到五组！做完后冷敷！");
 
-            var loops = parseInt(prompt("请输入是第几次训练 (1-10): "), 10);
-            var re_index = parseInt(prompt("请输入训练项目的索引 (1-8): "), 10);
+            var loops = parseInt(prompt(`请输入是第几次训练 (>1): `), 10);
+            var re_index = parseInt(prompt(`请输入训练项目的索引 (1-${reminders.length}): `), 10);
             if (isNaN(loops)) {
                 loops = 1;
             }
             if (isNaN(re_index)) {
                 re_index = 1;
             }
-            if (isNaN(loops) || isNaN(re_index) || loops < 1 || loops > 10 || re_index < 1 || re_index > reminders.length) {
+            if (isNaN(loops) || isNaN(re_index) || loops < 1 || re_index < 1 || re_index > reminders.length) {
                 alert("输入无效，请刷新页面并输入一个有效的索引。");
                 return;
             }
