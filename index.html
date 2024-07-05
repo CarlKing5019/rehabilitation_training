@@ -66,7 +66,7 @@
             "往左拉伸手！",
             "往右拉伸手！"
         ];
-        const startDelay = 5;
+        const startDuration = 5;
         const trainingDuration = 60;
         const littleRestDuration = 15;
         const bigRestDuration = 180;
@@ -117,36 +117,39 @@
         }
 
         function printProgressBar(totalSeconds) {
-            const progress = document.getElementById('progress');
-            const info = document.getElementById('info');
-
-            let elapsedSeconds = 0;
-            const progressBarInterval = setInterval(() => {
-                if (!isPaused) {
-                    elapsedSeconds++;
-                    const remainingSeconds = totalSeconds - elapsedSeconds;
-                    const minutes = Math.floor(remainingSeconds / 60);
-                    const seconds = remainingSeconds % 60;
-                    const percent = (elapsedSeconds / totalSeconds) * 100;
-                    progress.style.width = `${percent}%`;
-
-                    info.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                    if (elapsedSeconds >= totalSeconds) {
-                        clearInterval(progressBarInterval);
+            return new Promise(resolve => {
+                const progress = document.getElementById('progress');
+                const info = document.getElementById('info');
+    
+                let elapsedSeconds = 0;
+                const progressBarInterval = setInterval(() => {
+                    if (!isPaused) {
+                        elapsedSeconds++;
+                        const remainingSeconds = totalSeconds - elapsedSeconds;
+                        const minutes = Math.floor(remainingSeconds / 60);
+                        const seconds = remainingSeconds % 60;
+                        const percent = (elapsedSeconds / totalSeconds) * 100;
+                        progress.style.width = `${percent}%`;
+                        info.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+                        if (elapsedSeconds >= totalSeconds) {
+                            clearInterval(progressBarInterval);
+                            resolve();
+                        }
                     }
-                }
-            }, 1000);
+                }, 1000);
+            }
         }
 
         function delay(ms) {
             return new Promise(resolve => {
-                const interval = setInterval(() => {
-                    if (!isPaused) {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, ms);
+                resolve();
+                // const interval = setInterval(() => {
+                //     if (!isPaused) {
+                //         clearInterval(interval);
+                //         resolve();
+                //     }
+                // }, ms);
             });
         }
 
@@ -159,8 +162,8 @@
             logMessage(`${current_time} - 开始进行第 ${loops + 1} 次康复训练！！！`);
             notify("康复训练提醒", "准备开始康复训练");
             await speakMessage("Start rehabilitation training.");
-            printProgressBar(startDelay);
-            await delay(startDelay * 1000);
+            await printProgressBar(startDuration);
+            await delay(startDuration * 1000);
 
             while (true) {
                 const current_time = new Date().toLocaleString();
@@ -170,7 +173,7 @@
                 
                 notify("康复训练提醒", reminders[re_index]);
                 await speakMessage("It's time to do the next training.");
-                printProgressBar(trainingDuration);
+                await printProgressBar(trainingDuration);
                 window.scrollBy(0,30);
                 await delay(trainingDuration * 1000);
 
@@ -179,23 +182,23 @@
                 if (loops === old_loops) {
                     notify("康复训练提醒", `休息 ${littleRestDuration} 秒`);
                     await speakMessage("It's time to rest.");
-                    printProgressBar(littleRestDuration);
+                    await printProgressBar(littleRestDuration);
                     window.scrollBy(0,30);
                     await delay(littleRestDuration *1000);
                 } else {
                     logMessage(`${current_time} - 第 ${loops} 次长休息！`);
                     notify("康复训练提醒", `休息 ${bigRestDuration} 秒.`);
                     await speakMessage("It's time to have a long rest.");
-                    printProgressBar(bigRestDuration);
+                    await printProgressBar(bigRestDuration);
                     window.scrollBy(0,30);
                     await delay(bigRestDuration * 1000);
                     old_loops = loops;
                     logMessage(`${current_time} - 开始进行第 ${loops + 1} 次康复训练！！！`);
                     notify("康复训练提醒", "准备开始康复训练");
                     await speakMessage("Start rehabilitation training.");
-                    printProgressBar(startDelay);
+                    await printProgressBar(startDuration);
                     window.scrollBy(0,30);
-                    await delay(startDelay * 1000);
+                    await delay(startDuration * 1000);
                 }
             }
         }
