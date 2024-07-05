@@ -35,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Rehabilitation Training Reminder 2</h1>
+    <h1>Rehabilitation Training Reminder</h1>
     <h2 id="head"></h2>
     <div id="output"></div>
     <div id="progress-container">
@@ -64,17 +64,13 @@
         const bigRestDuration = 120;
         /* 设置结束 */
 
+
         let isPaused = false;
         const pauseBtn = document.getElementById('pause-btn');
-        // pauseBtn.addEventListener('click', () => {
-        //     isPaused = !isPaused;
-        //     pauseBtn.textContent = isPaused ? '继续' : '暂停';
-            
-        //     if ('speechSynthesis' in window) {
-        //         speechSynthesis.cancel(); // removes anything 'stuck'
-        //         speechSynthesis.getVoices(); // Safari loads voices synchronously so now safe to enable
-        //     }
-        // });
+        pauseBtn.addEventListener('click', () => {
+            isPaused = !isPaused;
+            pauseBtn.textContent = isPaused ? '继续' : '暂停';
+        });
 
         function logMessage(message) {
             const outputDiv = document.getElementById("output");
@@ -96,19 +92,21 @@
             }
         }
 
-        // function speakMessage(message) {
-        //     return new Promise(resolve => {
-        //         // if ('speechSynthesis' in window) {
-        //         //     const utter = new SpeechSynthesisUtterance();
-        //         //     utter.text = message;
-        //         //     utter.onend = resolve;
-        //         //     speechSynthesis.speak(utter);
-        //         // } else {
-        //         //     resolve();
-        //         // }
-        //         resolve();
-        //     });
-        // }
+        function speakMessage(message) {
+            return new Promise(resolve => {
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.cancel(); // removes anything 'stuck'
+                    speechSynthesis.getVoices(); // Safari loads voices synchronously so now safe to enable
+                } else {
+                    return resolve();
+                }
+
+                const utter = new SpeechSynthesisUtterance();
+                utter.text = message;
+                utter.onend = resolve;
+                speechSynthesis.speak(utter);
+            });
+        }
 
         function printProgressBar(totalSeconds) {
             const progress = document.getElementById('progress');
@@ -135,16 +133,12 @@
 
         function delay(ms) {
             return new Promise(resolve => {
-                let elapsed = 0;
                 const interval = setInterval(() => {
                     if (!isPaused) {
-                        elapsed += 1000;
-                        if (elapsed >= ms) {
-                            clearInterval(interval);
-                            resolve();
-                        }
+                        clearInterval(interval);
+                        resolve();
                     }
-                }, 1000);
+                }, ms);
             });
         }
 
@@ -156,7 +150,7 @@
 
             logMessage(`${current_time} - 开始进行康复训练！！！`);
             notify("康复训练提醒", "准备开始康复训练");
-            // await speakMessage("Start rehabilitation training.");
+            await speakMessage("Start rehabilitation training.");
             printProgressBar(startDelay);
             await delay(startDelay * 1000);
 
@@ -167,7 +161,7 @@
                 logMessage(reminder_text);
 
                 notify("康复训练提醒", reminders[re_index]);
-                // await speakMessage("It's time to do the next training.");
+                await speakMessage("It's time to do the next training.");
                 printProgressBar(trainingDuration);
                 await delay(trainingDuration * 1000);
 
@@ -175,13 +169,13 @@
                 loops = Math.floor(index / reminders.length);
                 if (loops === old_loops) {
                     notify("康复训练提醒", `休息 ${littleRestDuration} 秒`);
-                    // await speakMessage("It's time to rest.");
+                    await speakMessage("It's time to rest.");
                     printProgressBar(littleRestDuration);
-                    await delay(littleRestDuration * 1000);
+                    await delay(littleRestDuration *1000);
                 } else {
                     logMessage(`${current_time} - 第 ${loops} 次长休息！`);
                     notify("康复训练提醒", `休息 ${bigRestDuration} 秒.`);
-                    // await speakMessage("It's time to have a long rest.");
+                    await speakMessage("It's time to have a long rest.");
                     printProgressBar(bigRestDuration);
                     await delay(bigRestDuration * 1000);
                     old_loops = loops;
@@ -193,6 +187,13 @@
         if (Notification.permission !== "granted") {
             Notification.requestPermission().then(permission => {
             });
+        }
+
+        // 检查语音播报权限
+        if ( 'speechSynthesis' in window ) {
+          speechSynthesis.cancel(); // removes anything 'stuck'
+          speechSynthesis.getVoices();
+          // Safari loads voices synchronously so now safe to enable
         }
 
         document.addEventListener("DOMContentLoaded", () => {
