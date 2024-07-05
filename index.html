@@ -69,6 +69,11 @@
         pauseBtn.addEventListener('click', () => {
             isPaused = !isPaused;
             pauseBtn.textContent = isPaused ? '继续' : '暂停';
+            
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel(); // removes anything 'stuck'
+                speechSynthesis.getVoices(); // Safari loads voices synchronously so now safe to enable
+            }
         });
 
         function logMessage(message) {
@@ -189,7 +194,6 @@
             });
         }
 
-        // 绑定语音合成功能到按钮点击事件
         document.addEventListener("DOMContentLoaded", () => {
             const myDate = new Date();
             var dateStart = new Date("2024-07-04T00:00:00");
