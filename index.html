@@ -143,13 +143,17 @@
 
         function delay(ms) {
             return new Promise(resolve => {
-                resolve();
-                // const interval = setInterval(() => {
-                //     if (!isPaused) {
-                //         clearInterval(interval);
-                //         resolve();
-                //     }
-                // }, ms);
+                let elapsedSeconds = 0;
+                let totalSeconds = Math.floor(ms / 100);
+                const interval = setInterval(() => {
+                    if (!isPaused) {
+                        elapsedSeconds++;
+                        if (elapsedSeconds >= totalSeconds) {
+                            clearInterval(interval);
+                            resolve();
+                        }
+                    }
+                }, 100);
             });
         }
 
@@ -163,7 +167,6 @@
             notify("康复训练提醒", "准备开始康复训练");
             await speakMessage("Start rehabilitation training.");
             await printProgressBar(startDuration);
-            await delay(startDuration * 1000);
 
             while (true) {
                 const current_time = new Date().toLocaleString();
@@ -175,7 +178,6 @@
                 await speakMessage("It's time to do the next training.");
                 await printProgressBar(trainingDuration);
                 window.scrollBy(0,30);
-                await delay(trainingDuration * 1000);
 
                 index += 1;
                 loops = Math.floor(index / reminders.length);
@@ -184,21 +186,18 @@
                     await speakMessage("It's time to rest.");
                     await printProgressBar(littleRestDuration);
                     window.scrollBy(0,30);
-                    await delay(littleRestDuration *1000);
                 } else {
                     logMessage(`${current_time} - 第 ${loops} 次长休息！`);
                     notify("康复训练提醒", `休息 ${bigRestDuration} 秒.`);
                     await speakMessage("It's time to have a long rest.");
                     await printProgressBar(bigRestDuration);
                     window.scrollBy(0,30);
-                    await delay(bigRestDuration * 1000);
                     old_loops = loops;
                     logMessage(`${current_time} - 开始进行第 ${loops + 1} 次康复训练！！！`);
                     notify("康复训练提醒", "准备开始康复训练");
                     await speakMessage("Start rehabilitation training.");
                     await printProgressBar(startDuration);
                     window.scrollBy(0,30);
-                    await delay(startDuration * 1000);
                 }
             }
         }
