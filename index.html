@@ -64,7 +64,6 @@
         const bigRestDuration = 120;
         /* 设置结束 */
 
-
         let isPaused = false;
         const pauseBtn = document.getElementById('pause-btn');
         pauseBtn.addEventListener('click', () => {
@@ -95,16 +94,13 @@
         function speakMessage(message) {
             return new Promise(resolve => {
                 if ('speechSynthesis' in window) {
-                    speechSynthesis.cancel(); // removes anything 'stuck'
-                    speechSynthesis.getVoices(); // Safari loads voices synchronously so now safe to enable
+                    const utter = new SpeechSynthesisUtterance();
+                    utter.text = message;
+                    utter.onend = resolve;
+                    speechSynthesis.speak(utter);
                 } else {
-                    return resolve();
+                    resolve();
                 }
-
-                const utter = new SpeechSynthesisUtterance();
-                utter.text = message;
-                utter.onend = resolve;
-                speechSynthesis.speak(utter);
             });
         }
 
@@ -133,12 +129,16 @@
 
         function delay(ms) {
             return new Promise(resolve => {
+                let elapsed = 0;
                 const interval = setInterval(() => {
                     if (!isPaused) {
-                        clearInterval(interval);
-                        resolve();
+                        elapsed += 1000;
+                        if (elapsed >= ms) {
+                            clearInterval(interval);
+                            resolve();
+                        }
                     }
-                }, ms);
+                }, 1000);
             });
         }
 
@@ -171,7 +171,7 @@
                     notify("康复训练提醒", `休息 ${littleRestDuration} 秒`);
                     await speakMessage("It's time to rest.");
                     printProgressBar(littleRestDuration);
-                    await delay(littleRestDuration *1000);
+                    await delay(littleRestDuration * 1000);
                 } else {
                     logMessage(`${current_time} - 第 ${loops} 次长休息！`);
                     notify("康复训练提醒", `休息 ${bigRestDuration} 秒.`);
@@ -189,16 +189,10 @@
             });
         }
 
-        // 检查语音播报权限
-        if ( 'speechSynthesis' in window ) {
-          speechSynthesis.cancel(); // removes anything 'stuck'
-          speechSynthesis.getVoices();
-          // Safari loads voices synchronously so now safe to enable
-        }
-
+        // 绑定语音合成功能到按钮点击事件
         document.addEventListener("DOMContentLoaded", () => {
             const myDate = new Date();
-            var dateStart = new Date("2024-07-04");
+            var dateStart = new Date("2024-07-04T00:00:00");
             var diffValue = Math.floor((myDate - dateStart) / (1000 * 60 * 60 * 24)) + 1;
             const currentDateStr = `${myDate.getMonth() + 1}月${myDate.getDate()}日`;
             message = `${currentDateStr}，康复训练第${diffValue}天`;
