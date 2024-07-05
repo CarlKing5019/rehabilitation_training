@@ -57,6 +57,8 @@
             "往上压手腕！",
             "往前拉伸手！",
             "往下压手腕！",
+            "往前拉伸手！",
+            "往下压手腕！",
             "往左拉伸手！",
             "往右拉伸手！"
         ];
@@ -169,6 +171,7 @@
 
                 index += 1;
                 loops = Math.floor(index / reminders.length);
+                window.scrollBy(0,30);
                 if (loops === old_loops) {
                     notify("康复训练提醒", `休息 ${littleRestDuration} 秒`);
                     await speakMessage("It's time to rest.");
