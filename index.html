@@ -156,7 +156,7 @@
             let old_loops = loops;
             const current_time = new Date().toLocaleString();
 
-            logMessage(`${current_time} - 开始进行康复训练！！！`);
+            logMessage(`${current_time} - 开始进行第 ${loops + 1} 次康复训练！！！`);
             notify("康复训练提醒", "准备开始康复训练");
             await speakMessage("Start rehabilitation training.");
             printProgressBar(startDelay);
