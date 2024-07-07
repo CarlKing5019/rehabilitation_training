@@ -177,7 +177,7 @@
                 if (index % reminders.length === 0){
                     const current_time = new Date().toLocaleString();
                     logMessage(`${current_time} - 开始进行第 ${loops + 1} 次康复训练！！！`);
-                    logMessage(`当前：准备，后续：${reminders[index % reminders.length]}`, "next-event", false);
+                    logMessage(`后续：${reminders[index % reminders.length]}`, "next-event", false);
                     notify("康复训练提醒", "准备开始康复训练");
                     await speakMessage("Start rehabilitation training.");
                     await printProgressBar(startDuration, "green");
@@ -194,14 +194,14 @@
                 index += 1;
                 loops = Math.floor(index / reminders.length);
                 if (loops === old_loops) {
-                    logMessage(`当前：休息，后续：${reminders[index % reminders.length]}`, "next-event", false);
+                    logMessage(`后续：${reminders[index % reminders.length]}`, "next-event", false);
                     notify("康复训练提醒", `休息 ${littleRestDuration} 秒`);
                     await speakMessage("It's time to rest.");
                     await printProgressBar(littleRestDuration, "green");
                 } else {
                     const current_time = new Date().toLocaleString();
                     logMessage(`${current_time} - 第 ${loops} 次长休息！`);
-                    logMessage(`当前：休息，后续：${reminders[index % reminders.length]}`, "next-event", false);
+                    logMessage(`后续：${reminders[index % reminders.length]}`, "next-event", false);
                     notify("康复训练提醒", `休息 ${bigRestDuration} 秒.`);
                     await speakMessage("It's time to have a long rest.");
                     await printProgressBar(bigRestDuration, "green");
